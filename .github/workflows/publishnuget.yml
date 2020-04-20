@@ -23,7 +23,7 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
   publish:
     name: push
-    needs: [create-release, build]
+    needs: build-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
