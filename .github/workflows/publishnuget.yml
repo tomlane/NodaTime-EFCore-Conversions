@@ -4,9 +4,9 @@ on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
+      - "*.*.*" # Push events to matching v*, i.e. v1.0, v20.15.10
 
-jobs:  
+jobs:        
   build-test: 
     runs-on: ubuntu-latest
     steps:
@@ -15,6 +15,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    - name: Version Visual Studio SDK projects
+      uses: roryprimrose/set-vs-sdk-project-version@v1.0.3
+      with:
+        version: ${{ github.ref }}
     - name: Install dependencies
       run: dotnet restore
     - name: Build
@@ -33,5 +37,5 @@ jobs:
           PROJECT_FILE_PATH: src/NodaTime.EntityFrameworkCore.Conversions/NodaTime.EntityFrameworkCore.Conversions.csproj # Relative to repository root
           VERSION_STATIC: ${{ github.ref }}
           TAG_COMMIT: true # Flag to enable / disable git tagging
-          TAG_FORMAT: v* # Format of the git tag, [*] gets replaced with version
+          TAG_FORMAT: "*" # Format of the git tag, [*] gets replaced with version
           NUGET_KEY: ${{secrets.NUGET_API_KEY}} # API key for the NuGet feed
