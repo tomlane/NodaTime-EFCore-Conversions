@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodaTime.EntityFrameworkCore.Conversions", "src\NodaTime.EntityFrameworkCore.Conversions\NodaTime.EntityFrameworkCore.Conversions.csproj", "{FF7921C2-5698-4F98-8A6E-12A2B8B01B92}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodaTime.EntityFrameworkCore.Conversions.Sample", "src\NodaTime.EntityFrameworkCore.Conversions.Sample\NodaTime.EntityFrameworkCore.Conversions.Sample.csproj", "{48D8134B-D743-4B83-AA10-5AF18F7450E1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5A373460-E3AE-4CF2-9649-90C70C117950}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
