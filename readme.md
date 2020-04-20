@@ -1,4 +1,6 @@
-# NodaTime + EntityFrameworkCore (2.1.0+)
+# NodaTime + EntityFrameworkCore
+
+[![Build status](https://ci.appveyor.com/api/projects/status/sfe7n0a2r1ckllod/branch/develop?svg=true)](https://ci.appveyor.com/project/TomLane77791/nodatime-entityframeworkcore-conversions/branch/develop)
 
 ## What is this?
 
@@ -6,8 +8,8 @@ This repository contains an a netstandard project which has example implementati
 
 ## Is this a Nuget Library?
 
-No, not yet. I'm not sure if this is entirely Nuget library worthy. If you'd like to see this become a library raise an issue and it'll get sorted.
+Yes, it is! After much whailing and gnashing of teeth this is now a nuget package on [nuget.org](https://www.nuget.org/packages/NodaTime.EntityFrameworkCore.Conversions/)!
 
 ## What do I need to use these features?
 
-You'll need to ensure your project is using EntityFrameworkCore 2.1.0 or later. 
+You'll need to ensure your project is using the latest EntityFrameworkCore. 
