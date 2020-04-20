@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: version-number
-      uses: paulhatch/semantic-version@v1-beta
+      uses: PaulHatch/semantic-version@v2.1.1
       with:
         branch: "master"
         tag_prefix: "v"
