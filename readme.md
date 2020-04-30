@@ -4,7 +4,7 @@
 
 ## What is this?
 
-This repository contains an a netstandard project which has example implementations of type conversions, introduced in EntityFrameworkCore 2.1.0, that allow EntityFramework to understand and convert NodaTime types to usable types in EntityFramework. 
+This repository contains a netstandard project which has example implementations of type conversions, introduced in EntityFrameworkCore 2.1.0, that allow EntityFramework to understand and convert NodaTime types to usable types in EntityFramework. 
 
 ## Is this a Nuget Library?
 
