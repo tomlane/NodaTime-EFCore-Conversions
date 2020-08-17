@@ -103,7 +103,7 @@ jobs:
 
       - name: Upload nuget package release asset
         if: contains(github.ref, 'master')
-        id: upload-release-asset
+        id: upload-nuget-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -115,7 +115,7 @@ jobs:
 
       - name: Upload nuget package symbols release asset
         if: contains(github.ref, 'master')
-        id: upload-release-asset
+        id: upload-symbols-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
