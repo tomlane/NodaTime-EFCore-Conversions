@@ -6,7 +6,6 @@
     <IsPackable>true</IsPackable>
     <IsTestProject>false</IsTestProject>
 
-    <Version>1.0.0</Version>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
@@ -22,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-  <None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
+    <None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
   </ItemGroup>
 
   <ItemGroup>
