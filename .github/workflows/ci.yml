@@ -124,3 +124,19 @@ jobs:
           asset_path: ./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
           asset_name: NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
           asset_content_type: application/zip
+
+      - name: Upload nuget packages to Github Packages
+        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+        with:
+          nupkg-path: "./packages/*.nupkg"
+          repo-owner: "tomlane"
+          gh-user: "tomlane"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload nuget symbols to Github Packages
+        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+        with:
+          nupkg-path: "./packages/*.snupkg"
+          repo-owner: "tomlane"
+          gh-user: "tomlane"
+          token: ${{ secrets.GITHUB_TOKEN }}
