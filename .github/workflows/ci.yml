@@ -25,6 +25,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "3.1.401"
+          source-url: https://nuget.pkg.github.com/tomlane/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9
@@ -125,20 +128,5 @@ jobs:
           asset_name: NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
           asset_content_type: application/zip
 
-      - name: Upload nuget packages to Github Packages
-        if: contains(github.ref, 'master')
-        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
-        with:
-          nupkg-path: "./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg"
-          repo-owner: "tomlane"
-          gh-user: "tomlane"
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload nuget symbols to Github Packages
-        if: contains(github.ref, 'master')
-        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
-        with:
-          nupkg-path: "./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg"
-          repo-owner: "tomlane"
-          gh-user: "tomlane"
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push generated package to GitHub registry
+        run: dotnet nuget push ./packages/*.nupkg --skip-duplicate
