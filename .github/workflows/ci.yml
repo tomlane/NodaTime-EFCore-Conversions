@@ -129,7 +129,7 @@ jobs:
         if: contains(github.ref, 'master')
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
-          nupkg-path: "./packages/*.nupkg"
+          nupkg-path: "./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg"
           repo-owner: "tomlane"
           gh-user: "tomlane"
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -138,7 +138,7 @@ jobs:
         if: contains(github.ref, 'master')
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
-          nupkg-path: "./packages/*.snupkg"
+          nupkg-path: "./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg"
           repo-owner: "tomlane"
           gh-user: "tomlane"
           token: ${{ secrets.GITHUB_TOKEN }}
