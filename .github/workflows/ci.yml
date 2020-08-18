@@ -1,0 +1,144 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - hotfix/*
+      - feature/*
+      - release/*
+  pull_request:
+    branches: [develop]
+
+jobs:
+  ci:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Fetch all history for all tags and branches
+        run: git fetch --prune
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "3.1.401"
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9
+        with:
+          versionSpec: "5.1.x"
+      - name: Use GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9
+      - run: |
+          echo "Major: ${{ steps.gitversion.outputs.major }}"
+          echo "Minor: ${{ steps.gitversion.outputs.minor }}"
+          echo "Patch: ${{ steps.gitversion.outputs.patch }}"
+          echo "PreReleaseTag: ${{ steps.gitversion.outputs.preReleaseTag }}"
+          echo "PreReleaseTagWithDash: ${{ steps.gitversion.outputs.preReleaseTagWithDash }}"
+          echo "PreReleaseLabel: ${{ steps.gitversion.outputs.preReleaseLabel }}"
+          echo "PreReleaseNumber: ${{ steps.gitversion.outputs.preReleaseNumber }}"
+          echo "WeightedPreReleaseNumber: ${{ steps.gitversion.outputs.weightedPreReleaseNumber }}"
+          echo "BuildMetaData: ${{ steps.gitversion.outputs.buildMetaData }}"
+          echo "BuildMetaDataPadded: ${{ steps.gitversion.outputs.buildMetaDataPadded }}"
+          echo "FullBuildMetaData: ${{ steps.gitversion.outputs.fullBuildMetaData }}"
+          echo "MajorMinorPatch: ${{ steps.gitversion.outputs.majorMinorPatch }}"
+          echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
+          echo "LegacySemVer: ${{ steps.gitversion.outputs.legacySemVer }}"
+          echo "LegacySemVerPadded: ${{ steps.gitversion.outputs.legacySemVerPadded }}"
+          echo "AssemblySemVer: ${{ steps.gitversion.outputs.assemblySemVer }}"
+          echo "AssemblySemFileVer: ${{ steps.gitversion.outputs.assemblySemFileVer }}"
+          echo "FullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}"
+          echo "InformationalVersion: ${{ steps.gitversion.outputs.informationalVersion }}"
+          echo "BranchName: ${{ steps.gitversion.outputs.branchName }}"
+          echo "Sha: ${{ steps.gitversion.outputs.sha }}"
+          echo "ShortSha: ${{ steps.gitversion.outputs.shortSha }}"
+          echo "NuGetVersionV2: ${{ steps.gitversion.outputs.nuGetVersionV2 }}"
+          echo "NuGetVersion: ${{ steps.gitversion.outputs.nuGetVersion }}"
+          echo "NuGetPreReleaseTagV2: ${{ steps.gitversion.outputs.nuGetPreReleaseTagV2 }}"
+          echo "NuGetPreReleaseTag: ${{ steps.gitversion.outputs.nuGetPreReleaseTag }}"
+          echo "VersionSourceSha: ${{ steps.gitversion.outputs.versionSourceSha }}"
+          echo "CommitsSinceVersionSource: ${{ steps.gitversion.outputs.commitsSinceVersionSource }}"
+          echo "CommitsSinceVersionSourcePadded: ${{ steps.gitversion.outputs.commitsSinceVersionSourcePadded }}"
+          echo "CommitDate: ${{ steps.gitversion.outputs.commitDate }}"
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore -p:Version=${{ steps.gitversion.outputs.MajorMinorPatch }}
+
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
+
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build --output ./packages -p:PackageVersion=${{ steps.gitversion.outputs.MajorMinorPatch }}
+
+      - name: Upload nuget package artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: "NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg"
+          path: ./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg
+
+      - name: Upload nuget package symbols artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: "NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg"
+          path: ./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
+
+      - name: Create Release
+        if: contains(github.ref, 'master')
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.gitversion.outputs.majorMinorPatch }}
+          release_name: Release ${{ steps.gitversion.outputs.majorMinorPatch }}
+          draft: false
+          prerelease: false
+
+      - name: Upload nuget package release asset
+        if: contains(github.ref, 'master')
+        id: upload-nuget-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg
+          asset_name: NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg
+          asset_content_type: application/zip
+
+      - name: Upload nuget package symbols release asset
+        if: contains(github.ref, 'master')
+        id: upload-symbols-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
+          asset_name: NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
+          asset_content_type: application/zip
+
+      - name: Upload nuget packages to Github Packages
+        if: contains(github.ref, 'master')
+        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+        with:
+          nupkg-path: "./packages/*.nupkg"
+          repo-owner: "tomlane"
+          gh-user: "tomlane"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload nuget symbols to Github Packages
+        if: contains(github.ref, 'master')
+        uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+        with:
+          nupkg-path: "./packages/*.snupkg"
+          repo-owner: "tomlane"
+          gh-user: "tomlane"
+          token: ${{ secrets.GITHUB_TOKEN }}
