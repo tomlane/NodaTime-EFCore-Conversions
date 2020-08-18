@@ -126,6 +126,7 @@ jobs:
           asset_content_type: application/zip
 
       - name: Upload nuget packages to Github Packages
+        if: contains(github.ref, 'master')
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
           nupkg-path: "./packages/*.nupkg"
@@ -134,6 +135,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload nuget symbols to Github Packages
+        if: contains(github.ref, 'master')
         uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
           nupkg-path: "./packages/*.snupkg"
