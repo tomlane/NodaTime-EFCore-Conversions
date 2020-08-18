@@ -80,14 +80,14 @@ jobs:
       - name: Upload nuget package artifact
         uses: actions/upload-artifact@v1
         with:
-          name: "NodaTime.EntityFrameworkCore.Conversions-${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg"
-          path: ./packages/NodaTime.EntityFrameworkCore.Conversions-${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg
+          name: "NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg"
+          path: ./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg
 
       - name: Upload nuget package symbols artifact
         uses: actions/upload-artifact@v1
         with:
-          name: "NodaTime.EntityFrameworkCore.Conversions-${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg"
-          path: ./packages/NodaTime.EntityFrameworkCore.Conversions-${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
+          name: "NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg"
+          path: ./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
 
       - name: Create Release
         if: contains(github.ref, 'master')
@@ -109,8 +109,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./packages/NodaTime.EntityFrameworkCore.Conversions-${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg
-          asset_name: NodaTime.EntityFrameworkCore.Conversions-${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg
+          asset_path: ./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg
+          asset_name: NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg
           asset_content_type: application/zip
 
       - name: Upload nuget package symbols release asset
@@ -121,6 +121,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./packages/NodaTime.EntityFrameworkCore.Conversions-${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
-          asset_name: NodaTime.EntityFrameworkCore.Conversions-${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
+          asset_path: ./packages/NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
+          asset_name: NodaTime.EntityFrameworkCore.Conversions.${{ steps.gitversion.outputs.majorMinorPatch }}.snupkg
           asset_content_type: application/zip
